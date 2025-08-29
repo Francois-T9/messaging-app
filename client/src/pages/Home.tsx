@@ -1,9 +1,15 @@
 import { LoginForm } from "@/components/login-form";
+import Header from "../components/Header";
+import Footer from "@/components/Footer";
 
 function Home() {
   return (
-    <div className=" flex flex-col justify-center items-center p-2">
-      <LoginForm />
+    <div className=" h-screen w-screen">
+      <Header />
+      <div className="w-screen h-screen flex grow justify-center">
+        <LoginForm />
+      </div>
+      <Footer />
     </div>
   );
 }

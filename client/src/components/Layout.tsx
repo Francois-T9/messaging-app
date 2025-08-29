@@ -1,15 +1,17 @@
-import { Outlet } from "react-router-dom";
-import Footer from "./Footer";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import AppSidebar from "./app-sidebar";
+import { Outlet } from "react-router";
 
-import Header from "./Header";
-function Layout() {
+export default function Layout() {
   return (
-    <div className="min-h-screen flex flex-col ">
-      <Header />
-      <Outlet />
-      <Footer />
-    </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <main>
+        <SidebarTrigger />
+        <div className=" flex w-screen h-screen items-center justify-center">
+          <Outlet />
+        </div>
+      </main>
+    </SidebarProvider>
   );
 }
-
-export default Layout;
