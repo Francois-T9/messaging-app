@@ -14,6 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
+  SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
@@ -25,11 +26,11 @@ import {
 
 const mockData = [
   {
-    name: "Francois",
+    name: "FT",
     online: false,
   },
   {
-    name: "Yeyita",
+    name: "JM",
     online: true,
   },
 ];
@@ -44,39 +45,43 @@ export default function AppSidebar() {
           </Avatar>
         </a>
       </SidebarHeader>
-      <SidebarContent>
-        <Collapsible
-          key="conversations"
-          title="conversations"
-          defaultOpen
-          className="group/collapsible"
-        >
-          <SidebarGroup>
-            <SidebarGroupLabel
-              asChild
-              className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm"
-            >
-              <CollapsibleTrigger>
-                <MessageCircle />
-                Messages{" "}
-                <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+      <SidebarContent className="gap-0">
+        <SidebarMenu>
+        
+          <Collapsible
+            asChild
+
+            className="group/collapsible"
+          >
+            <SidebarMenuItem>
+              <CollapsibleTrigger asChild>
+                <SidebarMenuButton >
+                 <MessageCircle />
+                  <span>Messages</span>
+                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                </SidebarMenuButton>
               </CollapsibleTrigger>
-            </SidebarGroupLabel>
-            <CollapsibleContent>
-              <SidebarGroupContent>
-                <SidebarMenu>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                 
                   {mockData.map((user) => (
-                    <SidebarMenuItem key={user.name}>
-                      <SidebarMenuButton asChild>
-                        <a>{user.name}</a>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    <SidebarMenuSubItem key={user.name} >
+                      <SidebarMenuSubButton asChild onClick={()=>{console.log(`you entered ${user.name} profile`)}}>
+                       
+                           <Avatar className="h-8 w-16">
+                            <AvatarImage src="/logo.png" alt="App Logo" />
+                            <AvatarFallback>{user.name}</AvatarFallback>
+                          </Avatar>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
                   ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </CollapsibleContent>
-          </SidebarGroup>
-        </Collapsible>
+                
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </SidebarMenuItem>
+          </Collapsible>
+       
+      </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
