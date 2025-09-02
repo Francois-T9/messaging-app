@@ -3,36 +3,25 @@ datasource db {
      url      = env("DATABASE_URL")
    }
 
-   generator client {
+generator client {
      provider = "prisma-client-js"
    }
 
-   model User {
+model User {
+  id               Int       @id @default(autoincrement())
+  name             String @unique
+  password String
+  refreshToken String?
+  sentMessages     Message[] @relation("sentMessages")
+  receivedMessages Message[] @relation("receivedMessages")
+}
 
-    id Int @id @default(autoincrement())
-    name String @unique
-    messagesIn ReceivedMessages[]
-    messagesOut SentMessages[]
-   }
+model Message {
+  id         Int    @id @default(autoincrement())
+  content       String
+  sender     User   @relation(name: "sentMessages", fields: [senderId], references: [id])
+  receiver   User   @relation(name: "receivedMessages", fields: [receiverId], references: [id])
+  senderId   Int
+  receiverId Int
 
-   model ReceivedMessages {
-    id Int @id @default(autoincrement())
-    content String
-
-    user User @relation(fields: [userId],references: [id])
-
-
-    userId Int
-    receivedAt DateTime @default(now())
-   }
-    model SentMessages {
-        id Int @id @default(autoincrement())
-        content String
-
-        user User @relation(fields: [userId],references: [id])
-       
-
-        userId Int
-        
-        sentAt DateTime @default(now())
-   }
+}
