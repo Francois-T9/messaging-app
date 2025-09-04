@@ -1,7 +1,11 @@
 import express from "express";
-import login from "../controllers/auth.controller";
-const router = express.Router();
+import authControllers from "../controllers/auth.controller";
+import validateUser from "../middlewares/validation.middleware";
+import autheticateToken from "../middlewares/auth.middleware";
+const router = express.Router({ mergeParams: true });
 
-router.get("/", login);
+router.post("/login", authControllers.login);
+router.post("/signup", validateUser, authControllers.signup);
+router.post("/logout", autheticateToken, authControllers.logout);
 
 export default router;

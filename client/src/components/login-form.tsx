@@ -18,31 +18,36 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm, type Control, type FieldPath } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useUserStore } from "@/stores/userStore";
+import { useNavigate } from "react-router";
+import type { LoginInput } from "@/types/types";
+import { useState } from "react";
 
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-  password: z.string().min(2).max(50),
-});
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [error, setError] = useState<string>("");
+  const navigate = useNavigate();
+  const { login } = useUserStore();
+  const form = useForm({
     defaultValues: {
-      username: "",
+      name: "",
       password: "",
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (values: LoginInput) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
+    const res = await login(values);
+    if ("userId" in res) {
+      navigate("/dashboard");
+    } else {
+      setError(res.error);
+    }
+  };
   return (
     <div className={cn("flex flex-col gap-6 w-1/3", className)} {...props}>
       <Card>
@@ -56,8 +61,8 @@ export function LoginForm({
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <LoginFormField
-                name="username"
-                label="Username"
+                name="name"
+                label="Name"
                 placeholder="John Doe"
                 inputType="text"
                 formControl={form.control}
@@ -68,6 +73,7 @@ export function LoginForm({
                 inputType="password"
                 formControl={form.control}
               />
+              {error ? <p className="text-red-500">{error}</p> : null}
               <Button className="w-full" type="submit">
                 Log in
               </Button>
@@ -80,12 +86,12 @@ export function LoginForm({
 }
 
 type LoginFormFieldProps = {
-  name: FieldPath<z.infer<typeof formSchema>>;
+  name: FieldPath<LoginInput>;
   label: string;
   placeholder?: string;
   description?: string;
   inputType?: string;
-  formControl: Control<z.infer<typeof formSchema>>;
+  formControl: Control<LoginInput>;
 };
 const LoginFormField: React.FC<LoginFormFieldProps> = ({
   name,
