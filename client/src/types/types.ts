@@ -10,7 +10,7 @@ export type UserStore = {
   usersArray: UserData[];
   login: (input: LoginInput) => Promise<LoginOutput | UserData>;
   signup: (input: LoginInput) => Promise<LoginOutput | UserData>;
-  // logout;
+  logout: () => Promise<boolean>;
 };
 export type LoginInput = {
   name: string;

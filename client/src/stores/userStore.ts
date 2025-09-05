@@ -27,7 +27,7 @@ export const useUserStore = create<UserStore>((set) => ({
     const data = await response.json();
 
     if (data.accessToken) {
-      localStorage.setItem("acessToken", data.accessToken);
+      localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
     }
 
@@ -55,6 +55,7 @@ export const useUserStore = create<UserStore>((set) => ({
   },
   logout: async (): Promise<boolean> => {
     const accessToken = localStorage.getItem("accessToken");
+    console.log(accessToken);
     const response = await fetch("http://localhost:3000/api/logout", {
       method: "POST",
       headers: {
@@ -64,6 +65,7 @@ export const useUserStore = create<UserStore>((set) => ({
     });
 
     if (response.status == 200) {
+      console.log("Logged out successfully");
       localStorage.setItem("accessToken", "null");
       localStorage.setItem("refreshToken", "null");
       return true;

@@ -1,14 +1,16 @@
 "use client";
 
-import { ChevronRight, LogOutIcon, MessageCircle } from "lucide-react";
+import {
+  ChevronRight,
+  LogOutIcon,
+  MessageCircle,
+  User2Icon,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -23,7 +25,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-
+import { useUserStore } from "@/stores/userStore";
+import { useNavigate } from "react-router";
 const mockData = [
   {
     name: "FT",
@@ -35,6 +38,15 @@ const mockData = [
   },
 ];
 export default function AppSidebar() {
+  const navigate = useNavigate();
+  const { logout } = useUserStore();
+  const handleLogout = async () => {
+    const res = logout();
+    if (await res) {
+      navigate("/");
+    }
+  };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="p-4">
@@ -47,50 +59,44 @@ export default function AppSidebar() {
       </SidebarHeader>
       <SidebarContent className="gap-0">
         <SidebarMenu>
-        
-          <Collapsible
-            asChild
-
-            className="group/collapsible"
-          >
+          <Collapsible asChild className="group/collapsible">
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton >
-                 <MessageCircle />
-                  <span>Messages</span>
+                <SidebarMenuButton>
+                  <User2Icon />
+                  <span>Friends</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
-                 
                   {mockData.map((user) => (
-                    <SidebarMenuSubItem key={user.name} >
-                      <SidebarMenuSubButton asChild onClick={()=>{console.log(`you entered ${user.name} profile`)}}>
-                       
-                           <Avatar className="h-8 w-16">
-                            <AvatarImage src="/logo.png" alt="App Logo" />
-                            <AvatarFallback>{user.name}</AvatarFallback>
-                          </Avatar>
+                    <SidebarMenuSubItem key={user.name}>
+                      <SidebarMenuSubButton
+                        asChild
+                        onClick={() => {
+                          console.log(`you entered ${user.name} profile`);
+                        }}
+                      >
+                        <Avatar className="h-8 w-16">
+                          <AvatarImage src="/logo.png" alt="App Logo" />
+                          <AvatarFallback>{user.name}</AvatarFallback>
+                        </Avatar>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
-                
                 </SidebarMenuSub>
               </CollapsibleContent>
             </SidebarMenuItem>
           </Collapsible>
-       
-      </SidebarMenu>
+        </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem key="logout">
-            <SidebarMenuButton asChild>
-              <a href="/">
-                <LogOutIcon />
-                <span>Logout</span>
-              </a>
+            <SidebarMenuButton onClick={handleLogout}>
+              <LogOutIcon />
+              <span>Logout</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
