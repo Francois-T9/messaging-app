@@ -39,7 +39,7 @@ const login = async (req: Request, res: Response) => {
 
   // return responses with user info
 
-  res.json({ userId: user.id, name: user.name, accessToken, refreshToken });
+  res.json({ userId: user.id, name: user.name, accessToken });
 };
 
 const signup = async (req: Request, res: Response) => {

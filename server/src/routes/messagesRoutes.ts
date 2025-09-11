@@ -13,4 +13,10 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   messagesController.receivedMessages
 );
+
+router.get(
+  "/messages/:senderId/:receiverId",
+  passport.authenticate("jwt", { session: false }),
+  messagesController.messagesFromSenderToReceiver
+);
 export default router;

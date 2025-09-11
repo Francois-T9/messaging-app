@@ -39,4 +39,23 @@ const receivedMessages = async (req: Request, res: Response) => {
   }
 };
 
-export default { createMessage, receivedMessages };
+const messagesFromSenderToReceiver = async (req, res) => {
+  const { senderId, receiverId } = req.params;
+  try {
+    const response = await prisma.message.findMany({
+      where: {
+        senderId: parseInt(senderId),
+        receiverId: parseInt(receiverId),
+      },
+    });
+    res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export default {
+  createMessage,
+  receivedMessages,
+  messagesFromSenderToReceiver,
+};

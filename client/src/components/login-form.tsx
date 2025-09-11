@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm, type Control, type FieldPath } from "react-hook-form";
-import { useUserStore } from "@/stores/userStore";
+import { useAuthStore } from "@/stores/authStore";
 import { useNavigate } from "react-router";
 import type { LoginInput } from "@/types/types";
 import { useState } from "react";
@@ -29,7 +29,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
-  const { login } = useUserStore();
+  const { login } = useAuthStore();
   const form = useForm({
     defaultValues: {
       name: "",

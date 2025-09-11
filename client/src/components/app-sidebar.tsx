@@ -25,21 +25,19 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import { useUserStore } from "@/stores/userStore";
+import { useAuthStore } from "@/stores/authStore";
 import { useNavigate } from "react-router";
-const mockData = [
-  {
-    name: "FT",
-    online: false,
-  },
-  {
-    name: "JM",
-    online: true,
-  },
-];
+import { useEffect } from "react";
+import { useMenuSelectionStore } from "@/stores/menuSelectionStore";
+import { useConversationStore } from "@/stores/conversationStore";
+import { useUserStore } from "@/stores/userStore";
 export default function AppSidebar() {
+  const { setDashboardChild } = useMenuSelectionStore();
+  // const [allUsers, setAllUsers] = useState<UserList[]>([]);
+  const { setPartner } = useConversationStore();
   const navigate = useNavigate();
-  const { logout } = useUserStore();
+  const { logout, currentUser } = useAuthStore();
+  const { allUsers, getAllUsers } = useUserStore();
   const handleLogout = async () => {
     const res = logout();
     if (await res) {
@@ -47,22 +45,27 @@ export default function AppSidebar() {
     }
   };
 
+  const fetchUsersFromAPI = async () => {
+    await getAllUsers(currentUser);
+  };
+  useEffect(() => {
+    fetchUsersFromAPI();
+  }, []);
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="p-4">
-        <a href="/" className="flex items-center gap-3">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="/logo.png" alt="App Logo" />
-            <AvatarFallback>MA</AvatarFallback>
-          </Avatar>
-        </a>
+        <Avatar className="h-8 w-32">
+          <AvatarImage src="/logo.png" alt="App Logo" />
+          <AvatarFallback>{currentUser.name}</AvatarFallback>
+        </Avatar>
       </SidebarHeader>
       <SidebarContent className="gap-0">
         <SidebarMenu>
           <Collapsible asChild className="group/collapsible">
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton>
+                <SidebarMenuButton className="cursor-pointer">
                   <User2Icon />
                   <span>Friends</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -70,15 +73,17 @@ export default function AppSidebar() {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
-                  {mockData.map((user) => (
+                  {allUsers.map((user) => (
                     <SidebarMenuSubItem key={user.name}>
                       <SidebarMenuSubButton
+                        className="cursor-pointer "
                         asChild
                         onClick={() => {
-                          console.log(`you entered ${user.name} profile`);
+                          setDashboardChild("Chat");
+                          setPartner(user);
                         }}
                       >
-                        <Avatar className="h-8 w-16">
+                        <Avatar className="h-8 w-32 ">
                           <AvatarImage src="/logo.png" alt="App Logo" />
                           <AvatarFallback>{user.name}</AvatarFallback>
                         </Avatar>
@@ -89,12 +94,26 @@ export default function AppSidebar() {
               </CollapsibleContent>
             </SidebarMenuItem>
           </Collapsible>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              className="cursor-pointer"
+              onClick={() => {
+                setDashboardChild("Messages");
+              }}
+            >
+              <MessageCircle />
+              <span>Messages</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem key="logout">
-            <SidebarMenuButton onClick={handleLogout}>
+            <SidebarMenuButton
+              className="cursor-pointer"
+              onClick={handleLogout}
+            >
               <LogOutIcon />
               <span>Logout</span>
             </SidebarMenuButton>

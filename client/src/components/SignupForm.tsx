@@ -18,13 +18,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import type { LoginInput } from "@/types/types";
-import { useUserStore } from "@/stores/userStore";
+import { useAuthStore } from "@/stores/authStore";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 function SignupForm() {
   // 1. Define your form.
   const navigate = useNavigate();
-  const { signup } = useUserStore();
+  const { signup } = useAuthStore();
   const [errors, setErrors] = useState<string>("");
   const form = useForm({
     defaultValues: {
