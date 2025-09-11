@@ -4,7 +4,8 @@ import Home from "./pages/Home";
 import { ThemeProvider } from "./context/theme-provider";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-
+import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   const router = createBrowserRouter([
     {
@@ -21,9 +22,17 @@ function App() {
       children: [
         {
           path: "/dashboard",
-          element: <Dashboard />,
+          element: (
+            <ProtectedRoute>
+              <Dashboard />,
+            </ProtectedRoute>
+          ),
         },
       ],
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ]);
   return (
